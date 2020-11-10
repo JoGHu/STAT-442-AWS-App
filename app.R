@@ -1,8 +1,6 @@
-Test <- ToothGrowth
-
 library(shiny)
 library(ggplot2)
-library(shinyWidgets)
+
 
 # Define UI for application that draws a density plot
 ui <- fluidPage(
@@ -15,14 +13,17 @@ ui <- fluidPage(
         sidebarPanel(    
             
             # Slider for dosage size
-            sliderTextInput("dose",
+            sliderInput("dose",
                         "Dosage Size:",
-                        choices = c(0.5, 1, 2)),
+                        min = 0.5,
+                        max = 2.0,
+                        step = 0.5,
+                        value = 0.5),
             
             # Drop down box for supplement type
             selectInput("supp",
                         "Supplement Type:",
-                        choices = c("All", levels(Test$supp)))
+                        choices = c("All", levels(ToothGrowth$supp)))
             
         ),
 
@@ -38,7 +39,7 @@ server <- function(input, output) {
     
     # Reactive function to update the data based on the filters
     myData = reactive({
-        Set <- Test 
+        Set <- ToothGrowth 
         
         if(input$supp != "All")
         {
