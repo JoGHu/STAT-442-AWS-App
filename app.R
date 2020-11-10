@@ -4,7 +4,7 @@ library(shiny)
 library(ggplot2)
 library(shinyWidgets)
 
-# Define UI for application that draws a histogram
+# Define UI for application that draws a density plot
 ui <- fluidPage(
 
     # Application title
@@ -12,27 +12,31 @@ ui <- fluidPage(
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
-        sidebarPanel(
+        sidebarPanel(    
+            
+            # Slider for dosage size
             sliderTextInput("dose",
                         "Dosage Size:",
                         choices = c(0.5, 1, 2)),
             
+            # Drop down box for supplement type
             selectInput("supp",
                         "Supplement Type:",
                         choices = c("All", levels(Test$supp)))
             
         ),
 
-        # Show a plot of the generated distribution
+        # Define the plot
         mainPanel(
            plotOutput("distPlot")
         )
     )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw a density plot
 server <- function(input, output) {
     
+    # Reactive function to update the data based on the filters
     myData = reactive({
         Set <- Test 
         
@@ -46,6 +50,7 @@ server <- function(input, output) {
         return(Set)  
     })
 
+    # Generate the density plot
     output$distPlot <- renderPlot({
        
         ggplot(data = myData(), aes(x = len))+
